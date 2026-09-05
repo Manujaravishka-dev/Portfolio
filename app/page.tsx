@@ -19,7 +19,7 @@ export default function Portfolio() {
   useEffect(() => {
     const update = () => setTime(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Colombo', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()));
     update(); const timer = setInterval(update, 10000);
-    const readHash = () => { const match = pages.find(p => p.toLowerCase() === location.hash.slice(1)); setPage(match || 'Home'); };
+    const readHash = () => { if (location.hash === '#content') return; const match = pages.find(p => p.toLowerCase() === location.hash.slice(1)); setPage(match || 'Home'); };
     readHash(); window.addEventListener('hashchange', readHash);
     try { setLight(localStorage.getItem('portfolio-theme') === 'light'); const saved = localStorage.getItem('portfolio-tier'); if (saved && ['High','Medium','Saver'].includes(saved)) setTier(saved); } catch {}
     return () => { clearInterval(timer); window.removeEventListener('hashchange', readHash); };
