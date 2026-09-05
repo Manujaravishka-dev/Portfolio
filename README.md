@@ -1,6 +1,5 @@
 # Manuja Ravishka — Interactive Portfolio
 
-Next.js, TypeScript, Three.js and GSAP reconstruction of the visual direction at https://www.saifullah.dev/, personalised with Manuja's supplied portrait.
 
 ## Run
 Requires Node.js 20.9+.
