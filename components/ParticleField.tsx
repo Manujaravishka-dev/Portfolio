@@ -19,7 +19,7 @@ export default function ParticleField({ tier, paused, light }: { tier: string; p
     const geometry = new THREE.BufferGeometry();
     const material = new THREE.PointsMaterial({size: tier === 'Saver' ? .018 : .012, vertexColors: true, transparent: true, opacity: .95, depthWrite: false, blending: light ? THREE.NormalBlending : THREE.AdditiveBlending});
     const picture = new Image();
-    picture.src = '/manuja-portrait.webp';
+    picture.src = '/manuja-portrait.png';
     picture.onload = () => {
       if (disposed) return;
       const canvas = document.createElement('canvas');
@@ -62,5 +62,5 @@ export default function ParticleField({ tier, paused, light }: { tier: string; p
     frame = requestAnimationFrame(animate);
     return () => { disposed = true; picture.onload = null; cancelAnimationFrame(frame); observer.disconnect(); window.removeEventListener('pointermove',pointer); geometry.dispose(); material.dispose(); renderer.dispose(); renderer.domElement.remove(); };
   },[tier,paused,light]);
-  return <div className="portrait-field"><img className="portrait-fallback" src="/manuja-portrait.webp" alt="Manuja Ravishka" /><div className="portrait-canvas" ref={host} aria-hidden="true" /></div>;
+  return <div className="portrait-field"><img className="portrait-fallback" src="/manuja-portrait.png" alt="Manuja Ravishka" /><div className="portrait-canvas" ref={host} aria-hidden="true" /></div>;
 }
