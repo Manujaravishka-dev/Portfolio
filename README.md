@@ -1,39 +1,32 @@
-# Manuja Ravishka — Portfolio
+# Manuja Ravishka — Interactive Portfolio
 
-A responsive creative developer portfolio inspired by the monochrome visual direction of https://www.saifullah.dev/. Built independently with **Next.js, React, TypeScript, CSS, Three.js, and GSAP**. No source code, portrait, personal history, or project claims from the reference are reused.
+Next.js, TypeScript, Three.js and GSAP reconstruction of the visual direction at https://www.saifullah.dev/, personalised with Manuja's supplied portrait.
 
-## Run locally
-
-Requires Node.js 20.9+ and npm.
-
+## Run
+Requires Node.js 20.9+.
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-Open http://localhost:3000.
-
-## Validate and build
-
+## Check and build
 ```sh
 npm run typecheck
 npm run build
 ```
+The static production site is generated in `out/`.
 
-The static production website is generated in `out/`. Deploy this directory to a static host, or import the repository into Vercel with the Next.js preset.
+## Routes
+Home, About, Projects and Contact have direct URLs. The 16 reference project entries each have a refreshable detail route. Browser Back/Forward is supported.
 
-## Personalize
+## Portrait
+`public/manuja-portrait.webp` is a size-optimised encoding of the photo supplied by Manuja. The original identity and composition are preserved. Three.js samples luminance and local contrast from this photograph to form a shallow point cloud, with subtle pointer parallax. This is a photo-derived depth effect, not a scanned three-dimensional head model.
 
-Edit `lib/profile.ts` for your name, biography, email, GitHub links, and projects. The initial version deliberately includes only the known portfolio project. Add your email to enable the email contact action. Font families are loaded from Google Fonts, with local system fallbacks.
+## Reference content
+The project names, thumbnails, ordering and demonstration statistics retain the reference site's content for visual parity, as requested. These are template/reference data, not verified claims about Manuja's experience or work. Original projects are credited to Saifullah Butt in the collection and project details. Replace them in `lib/projects.ts` and `components/Portfolio.tsx` before using this as a factual professional CV. Thumbnail images are served from the original public asset CDN.
 
-## Features
+Contact actions link to Manuja's verified GitHub profile, because no personal email or phone number was supplied. Typography uses Bebas Neue and IBM Plex Mono as open font substitutes for the reference's custom fonts. Project case-study text is independently summarised; complete original case studies open through the source link.
 
-- Four bookmarkable views: Home, About, Projects, Contact.
-- Responsive navigation with keyboard focus states and Escape dismissal.
-- Interactive Three.js particle geometry with three rendering tiers.
-- GSAP transitions that respect reduced-motion preferences.
-- Light/dark theme and performance preferences persisted locally.
-- Optional synthesized ambient sound, disabled until explicitly enabled.
-- Colombo clock and GitHub links.
+## Controls
+The entry screen loads the portrait before allowing entry. Theme and performance choices are saved locally. Audio starts only when enabled. Sound presets change the synthesised tone. Animation respects reduced-motion preferences. Settings and menu support Escape dismissal.
 
-The abstract visual is an original geometric particle study. Replace or extend `components/ParticleField.tsx` when a personal portrait or 3D asset is available.
