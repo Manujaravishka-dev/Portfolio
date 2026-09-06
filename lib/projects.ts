@@ -1,12 +1,15 @@
 // Reference projects preserved for visual parity; original work belongs to the credited creators.
 export const projects = [
   {
-    "title": "Ottava™ Surgical Robotic System",
-    "category": "Simulation-based training",
-    "service": "WebXR development",
-    "slug": "ottava-surgical-robotic-system",
-    "image": "https://ap-south-1.graphassets.com/cmfp0zaq80ayq07pj9bao44gl/resize=height:450,width:800/cmpya0qlo0qpd07pfs9ijihlq",
-    "description": "A browser-based environment for exploring surgical training in virtual reality."
+    "title": "Smart Parking Management System",
+    "category": "Backend Microservices",
+    "service": "Java & Spring Boot Development",
+    "slug": "smart-parking-management-system",
+    "image": "https://raw.githubusercontent.com/Manujaravishka-dev/Smart-Parking-Management-System/master/docs/Screenshot%201.png",
+    "description": "A backend-only smart parking platform built as seven Spring Boot microservices, enabling real-time parking discovery, reservations, vehicle entry and exit tracking, digital payments, and receipts through a single API Gateway.",
+    "url": "https://github.com/Manujaravishka-dev/Smart-Parking-Management-System",
+    "linkLabel": "View GitHub Repository",
+    "credit": "MANUJA RAVISHKA"
   },
   {
     "title": "Mindset Of Success",
