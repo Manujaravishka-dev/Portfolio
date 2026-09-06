@@ -417,7 +417,7 @@
   .loader.loader-ready .loader-desktop-music button{
     min-width:58px;
     padding:10px 14px;
-    border-radius:999pxpx;
+    border-radius:999px;
     font:700 10px var(--mono);
     letter-spacing:.12em;
     color:#4d4d4d;
