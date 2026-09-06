@@ -6,7 +6,7 @@ import { usePortfolioAudio } from '@/hooks/usePortfolioAudio';
 const MAX_MS = 7000;
 const LEAD_MS = 2200;
 
-type Mode = 'sound' | 'silent';
+type Mode = 'on' | 'off';
 
 function labelFor(progress: number): string {
   if (progress >= 100) return 'SYSTEM_READY';
@@ -30,6 +30,21 @@ function waitForWindowLoad(): Promise<void> {
   });
 }
 
+function isCoarsePointer(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches === true;
+}
+
+async function requestFullscreenOnMobile(): Promise<void> {
+  if (!isCoarsePointer() || typeof document === 'undefined') return;
+  try {
+    // Real fullscreen for mobile/tablet only; must be called inside the
+    // user-interaction handler. If unsupported or denied, entry continues.
+    await document.documentElement.requestFullscreen?.();
+  } catch {
+    /* continue normally */
+  }
+}
+
 function preloadImage(src: string): Promise<void> {
   return new Promise((resolve) => {
     const img = new Image();
@@ -44,7 +59,7 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
   const [progress, setProgress] = useState(0);
   const [tier, setTier] = useState('MEDIUM');
   const [ready, setReady] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<Mode | null>(null);
+  const [musicChoice, setMusicChoice] = useState<Mode | null>(null);
   const [entering, setEntering] = useState(false);
   const [fading, setFading] = useState(false);
   const [gone, setGone] = useState(false);
@@ -53,6 +68,7 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
   const enteringRef = useRef(false);
   const onFinishRef = useRef(onFinish);
   const enterRef = useRef<HTMLButtonElement>(null);
+  const mobileEnterRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     onFinishRef.current = onFinish;
@@ -123,31 +139,34 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
 
   const chooseMode = (mode: Mode) => {
     if (!readyRef.current || entering) return;
-    setSelectedMode(mode);
-    if (mode === 'sound') {
+    setMusicChoice(mode);
+    if (mode === 'on') {
+      // Music ON: enable system sound + background music (deferred play).
       setSound(true, true);
       setMusic(true, true);
     } else {
+      // Music OFF: stay silent; the song is never started and sound is muted.
       setSound(false, true);
     }
   };
 
   useEffect(() => {
-    if (selectedMode && !entering) {
+    if (musicChoice && !entering) {
       enterRef.current?.focus({ preventScroll: true });
+      mobileEnterRef.current?.focus({ preventScroll: true });
     }
-  }, [selectedMode, entering]);
+  }, [musicChoice, entering]);
 
   const enter = async () => {
-    if (!readyRef.current || selectedMode === null || enteringRef.current) return;
+    if (!readyRef.current || musicChoice === null || enteringRef.current) return;
     enteringRef.current = true;
     setEntering(true);
-    if (selectedMode === 'sound') {
-      // Direct play() from this real click/tap/touch. If the browser still
-      // blocks it, the audio manager arms a one-shot retry for the next
-      // interaction; entry proceeds regardless so the site never traps.
-      await startMusic();
-    }
+    // Both the song play() and the fullscreen request are issued synchronously
+    // inside this same user gesture (before any await suspends the handler),
+    // so browsers treat them as real click/tap/touch activation.
+    const musicPromise = musicChoice === 'on' ? startMusic() : Promise.resolve(true);
+    await requestFullscreenOnMobile();
+    await musicPromise;
     setFading(true);
     setTimeout(() => {
       setGone(true);
@@ -163,14 +182,20 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
 
   return (
     <div
-      className={'loader' + (fading ? ' fading' : '') + (selectedMode && !entering ? ' gate-ready' : '')}
+      className={'loader' + (fading ? ' fading' : '') + (ready ? ' loader-ready' : '') + (musicChoice && !entering ? ' gate-ready' : '')}
       role="progressbar"
       aria-label="Loading portfolio"
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={percent}
       onClick={() => {
-        if (readyRef.current && selectedMode && !entering) enter();
+        if (readyRef.current && musicChoice && !entering) enter();
+      }}
+      onPointerDown={() => {
+        // Responsive entry on coarse-pointer (touch) devices: accept the tap
+        // on pointerdown so audio/fullscreen start as early as allowed. Click
+        // below is the fallback, guarded by enteringRef against double entry.
+        if (isCoarsePointer() && readyRef.current && musicChoice && !entering) enter();
       }}
     >
       <div className="loader-grid" aria-hidden="true" />
@@ -184,21 +209,35 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
       <div className="loader-percent" aria-hidden="true"><b>{percent}</b><small>%</small></div>
       <div className="loader-tier" aria-hidden="true"><small>PERFORMANCE TIER</small><strong>[{tier}]</strong></div>
       {ready && !entering && (
-        <div className="loader-gate">
-          <div className="loader-modes" role="group" aria-label="Choose sound mode">
-            <button type="button" className={'loader-mode' + (selectedMode === 'sound' ? ' selected' : '')} aria-pressed={selectedMode === 'sound'} onClick={() => chooseMode('sound')}>SOUND MODE</button>
-            <button type="button" className={'loader-mode' + (selectedMode === 'silent' ? ' selected' : '')} aria-pressed={selectedMode === 'silent'} onClick={() => chooseMode('silent')}>SILENT MODE</button>
+        <>
+          <div className="loader-gate">
+            <div className="loader-modes" role="group" aria-label="Choose sound mode">
+              <button type="button" className={'loader-mode' + (musicChoice === 'on' ? ' selected' : '')} aria-pressed={musicChoice === 'on'} onClick={() => chooseMode('on')}>SOUND MODE</button>
+              <button type="button" className={'loader-mode' + (musicChoice === 'off' ? ' selected' : '')} aria-pressed={musicChoice === 'off'} onClick={() => chooseMode('off')}>SILENT MODE</button>
+            </div>
+            {musicChoice && (
+              <button type="button" ref={enterRef} className="loader-enter" onClick={enter}>CLICK / TAP TO ENTER</button>
+            )}
           </div>
-          {selectedMode && (
-            <button type="button" ref={enterRef} className="loader-enter" onClick={enter}>CLICK / TAP TO ENTER</button>
-          )}
-        </div>
+          <div className="loader-gate-mobile">
+            <button type="button" ref={mobileEnterRef} className="loader-enter-area" onClick={enter}>
+              <b className="loader-enter-click">CLICK</b>
+              <i className="loader-enter-divider" aria-hidden="true" />
+              <span className="loader-enter-sub">TO ENTER</span>
+            </button>
+            <div className="loader-music" role="group" aria-label="Choose music mode">
+              <button type="button" className={'loader-music-key' + (musicChoice === 'on' ? ' selected' : '')} aria-pressed={musicChoice === 'on'} onClick={() => chooseMode('on')}>ON</button>
+              <span className="loader-music-lbl">MUSIC</span>
+              <button type="button" className={'loader-music-key' + (musicChoice === 'off' ? ' selected' : '')} aria-pressed={musicChoice === 'off'} onClick={() => chooseMode('off')}>OFF</button>
+            </div>
+          </div>
+        </>
       )}
       <div className="loader-ctl" aria-hidden="true">
         <div className="loader-status"><span>{status}</span><em>{percent}%</em></div>
         <div className="loader-bar">
           <div className="loader-bar-track"><i style={{ width: percent + '%' }} /></div>
-          <b>{mode}</b>
+          <b><span className="loader-bar-key">{mode}</span><span className="loader-bar-loaded" aria-hidden="true">LOADED</span></b>
         </div>
       </div>
     </div>
