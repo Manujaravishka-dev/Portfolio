@@ -59,7 +59,7 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
   const [progress, setProgress] = useState(0);
   const [tier, setTier] = useState('MEDIUM');
   const [ready, setReady] = useState(false);
-  const [musicChoice, setMusicChoice] = useState<Mode | null>(null);
+  const [musicChoice, setMusicChoice] = useState<Mode>('on');
   const [entering, setEntering] = useState(false);
   const [fading, setFading] = useState(false);
   const [gone, setGone] = useState(false);
@@ -165,12 +165,15 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
   }, [musicChoice, entering]);
 
   const enter = async () => {
-    if (!readyRef.current || musicChoice === null || enteringRef.current) return;
+    if (!readyRef.current || enteringRef.current) return;
     enteringRef.current = true;
     setEntering(true);
-    // Both the song play() and the fullscreen request are issued synchronously
-    // inside this same user gesture (before any await suspends the handler),
-    // so browsers treat them as real click/tap/touch activation.
+    // Music defaults to ON. The final ENTER click/tap is the browser-approved
+    // user gesture that enables audio and starts playback.
+    if (musicChoice === 'on') {
+      setSound(true, true);
+      setMusic(true, true);
+    }
     const musicPromise = musicChoice === 'on' ? startMusic() : Promise.resolve(true);
     await requestFullscreenOnMobile();
     await musicPromise;
@@ -195,14 +198,14 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={percent}
-      onClick={() => {
-        if (readyRef.current && musicChoice && !entering) enter();
+      onClick={(event) => {
+        if ((event.target as Element).closest('button')) return;
+        if (readyRef.current && !entering) enter();
       }}
-      onPointerDown={() => {
-        // Responsive entry on coarse-pointer (touch) devices: accept the tap
-        // on pointerdown so audio/fullscreen start as early as allowed. Click
-        // below is the fallback, guarded by enteringRef against double entry.
-        if (isCoarsePointer() && readyRef.current && musicChoice && !entering) enter();
+      onPointerDown={(event) => {
+        if ((event.target as Element).closest('button')) return;
+        // On touch devices, the first tap starts audio/fullscreen immediately.
+        if (isCoarsePointer() && readyRef.current && !entering) enter();
       }}
     >
       <div className="loader-grid" aria-hidden="true" />
@@ -227,8 +230,8 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
                 })}
               </div>
             </div>
-            <button type="button" ref={enterRef} className="loader-desktop-enter" onClick={enter} disabled={!musicChoice}>
-              <span>ENTER</span><b>{musicChoice ? 'VIBE_01' : 'SELECT_VIBE'}</b>
+            <button type="button" ref={enterRef} className="loader-desktop-enter" onClick={enter} >
+              <span>ENTER</span><b>VIBE_01</b>
             </button>
             <div className="loader-desktop-music" role="group" aria-label="Choose music mode">
               <button type="button" className={musicChoice === 'on' ? 'selected' : ''} aria-pressed={musicChoice === 'on'} onClick={() => chooseMode('on')}>On</button>
