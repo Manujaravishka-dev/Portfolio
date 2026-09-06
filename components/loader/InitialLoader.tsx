@@ -137,6 +137,13 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
     };
   }, []);
 
+  const chooseTier = (nextTier: string) => {
+    setTier(nextTier);
+    try {
+      localStorage.setItem('portfolio-tier', nextTier[0] + nextTier.slice(1).toLowerCase());
+    } catch {}
+  };
+
   const chooseMode = (mode: Mode) => {
     if (!readyRef.current || entering) return;
     setMusicChoice(mode);
@@ -211,13 +218,23 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
       {ready && !entering && (
         <>
           <div className="loader-gate">
-            <div className="loader-modes" role="group" aria-label="Choose sound mode">
-              <button type="button" className={'loader-mode' + (musicChoice === 'on' ? ' selected' : '')} aria-pressed={musicChoice === 'on'} onClick={() => chooseMode('on')}>SOUND MODE</button>
-              <button type="button" className={'loader-mode' + (musicChoice === 'off' ? ' selected' : '')} aria-pressed={musicChoice === 'off'} onClick={() => chooseMode('off')}>SILENT MODE</button>
+            <div className="loader-performance" role="group" aria-label="Choose performance tier">
+              <small>PERFORMANCE TIER</small>
+              <div>
+                {['HIGH', 'MED', 'SAVER'].map((option) => {
+                  const value = option === 'MED' ? 'MEDIUM' : option;
+                  return <button type="button" key={option} className={tier === value ? 'selected' : ''} aria-pressed={tier === value} onClick={() => chooseTier(value)}>{option}</button>;
+                })}
+              </div>
             </div>
-            {musicChoice && (
-              <button type="button" ref={enterRef} className="loader-enter" onClick={enter}>CLICK / TAP TO ENTER</button>
-            )}
+            <button type="button" ref={enterRef} className="loader-desktop-enter" onClick={enter} disabled={!musicChoice}>
+              <span>ENTER</span><b>{musicChoice ? 'VIBE_01' : 'SELECT_VIBE'}</b>
+            </button>
+            <div className="loader-desktop-music" role="group" aria-label="Choose music mode">
+              <button type="button" className={musicChoice === 'on' ? 'selected' : ''} aria-pressed={musicChoice === 'on'} onClick={() => chooseMode('on')}>On</button>
+              <span>MUSIC</span>
+              <button type="button" className={musicChoice === 'off' ? 'selected' : ''} aria-pressed={musicChoice === 'off'} onClick={() => chooseMode('off')}>Off</button>
+            </div>
           </div>
           <div className="loader-gate-mobile">
             <button type="button" ref={mobileEnterRef} className="loader-enter-area" onClick={enter}>
