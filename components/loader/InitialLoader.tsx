@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { usePortfolioAudio } from '@/hooks/usePortfolioAudio';
 
 const MAX_MS = 7000;
-const LEAD_MS = 2200;
+const LEAD_MS = 350;
 
 type Mode = 'on' | 'off';
 
@@ -209,6 +209,13 @@ export default function InitialLoader({ onFinish }: { onFinish?: () => void }) {
       }}
     >
       <div className="loader-grid" aria-hidden="true" />
+      <div className="loader-hero" aria-hidden="true">
+        <span className="loader-hero-eyebrow"><i /> PORTFOLIO / 2026 <span>— SYSTEM BOOT</span></span>
+        <h1 className="loader-hero-title"><span>MANUJA</span><span>RAVISHKA<span className="loader-hero-dot">.</span></span></h1>
+        <div className="loader-hero-rule"><span /></div>
+        <p className="loader-hero-sub">CREATIVE DEVELOPER <span>↗</span> DIGITAL EXPERIENCES</p>
+        <div className="loader-hero-foot"><span>DESIGN × DEVELOPMENT</span><span>{String(percent).padStart(3,'0')} / 100</span></div>
+      </div>
       <span className="loader-cell loader-cell-a" aria-hidden="true" />
       <span className="loader-cell loader-cell-b" aria-hidden="true" />
       <span className="loader-blob loader-blob-a" aria-hidden="true" />
