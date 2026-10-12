@@ -79,10 +79,10 @@ return <div className={'portfolio page-'+page.toLowerCase()+(selected!==null?' d
     {page==='Home'&&<div className="left-glass" aria-hidden="true"/>}
     <header className="wordmark"><a href="#home" onClick={()=>navigate('Home')} aria-label="Manuja Ravishka home"><span>Manuja<br/>Ravishka</span><span>Portfolio<br/>2026</span></a></header>
     {page!=='Home'&&selected===null&&<div className="page-heading"><p><button onClick={()=>navigate('Home')}>HOME</button> / {page.toUpperCase()}</p><h1>{page==='About'?'MEET MANUJA':page.toUpperCase()}</h1></div>}
-    {page==='Home'&&<div className="ticker" aria-hidden="true"><div>{Array.from({length:4},(_,i)=><span key={i}><small>CORE_ID</small> CREATIVE DEVELOPER <small>AVAILABILITY</small> OPEN <small>RENDERING</small> WEBGL / THREE.JS </span>)}</div></div>}
+    {page==='Home'&&<div className="ticker" aria-hidden="true"><div>{Array.from({length:4},(_,i)=><span key={i}><small>CORE_ID</small> FULL STACK DEVELOPER <small>AVAILABILITY</small> OPEN <small>RENDERING</small> WEBGL / THREE.JS </span>)}</div></div>}
     <main id="content" ref={content} tabIndex={-1} className={'content '+(page==='Projects'?'project-scroll':'')} onScroll={e=>{const el=e.currentTarget;setScroll(el.scrollHeight>el.clientHeight?el.scrollTop/(el.scrollHeight-el.clientHeight)*100:0);}}>
       {page==='Home'&&<section className="home-scene">
-        <div className="home-intro reveal"><h1>CREATIVE<br/>DEVELOPER</h1><div className="info-log"><i/><div><small>[ INFO_LOG ]</small><p>SCULPTING TECHNICAL PERFORMANCE<br/>INTO IMMERSIVE DIGITAL ART.</p></div></div></div>
+        <div className="home-intro reveal"><h1>FULL STACK<br/>DEVELOPER</h1><div className="info-log"><i/><div><small>[ INFO_LOG ]</small><p>SCULPTING TECHNICAL PERFORMANCE<br/>INTO IMMERSIVE DIGITAL ART.</p></div></div></div>
         <div className="home-portrait"><img src="/image.png" alt="" draggable={false} decoding="async"/></div>
         <aside className="stats reveal"><small>DEVELOPER STATS</small><p className="sync"><b/> STABLE</p><div className="stat"><span>PROJECTS_COMPLETED</span><span>45+</span></div><div className="stat"><span>EXPERIENCE_YEARS</span><span>10+</span></div><div className="terminal"><p>&gt; ACTIVE_STACK: NEXT_THREE_GSAP</p><p>&gt; AVAILABILITY_TYPE: REMOTE/HYBRID</p><p>&gt; STATUS: OPEN_FOR_OFFERS</p><p>&gt; SYSTEM_PERF: [{tier.toUpperCase()}]</p></div></aside>
       </section>}
@@ -90,7 +90,7 @@ return <div className={'portfolio page-'+page.toLowerCase()+(selected!==null?' d
         <div className="about-portrait"><img src="/manuja-portrait.webp" alt="Portrait of Manuja Ravishka"/></div>
         <article className="about-copy">
           <p className="reveal">Meet Manuja</p>
-          <h2 className="reveal">CREATIVE FRONTEND<br/>DEVELOPER</h2>
+          <h2 className="reveal">FULL STACK<br/>DEVELOPER</h2>
           <p className="reveal">I explore the connection between design and technology, creating web experiences with personality, thoughtful interactions and attention to detail.</p>
           <p className="reveal">A passion for</p>
           <h2 className="reveal">IMMERSIVE DIGITAL<br/>EXPERIENCES</h2>
