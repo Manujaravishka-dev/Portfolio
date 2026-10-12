@@ -7,21 +7,23 @@ import { Grid2X2, X, Volume2, VolumeX, ArrowUpRight } from 'lucide-react';
 import { profile } from '@/lib/profile';
 import { usePortfolioAudio } from '@/hooks/usePortfolioAudio';
 
-const pages = ['Home', 'About', 'Projects', 'Contact'] as const;
+const pages = ['Home', 'About', 'Experience', 'Projects', 'Contact'] as const;
 type Page = (typeof pages)[number];
 
 const pageMap: Record<string, { index: string; label: string }> = {
   '/': { index: '1', label: 'HOME' },
   '/about': { index: '2', label: 'ABOUT' },
-  '/projects': { index: '3', label: 'PROJECTS' },
-  '/contact': { index: '4', label: 'CONTACT' },
+  '/experience': { index: '3', label: 'EXPERIENCE' },
+  '/projects': { index: '4', label: 'PROJECTS' },
+  '/contact': { index: '5', label: 'CONTACT' },
 };
 
 const pageEntry: Record<Page, { index: string; label: string }> = {
   Home: { index: '1', label: 'HOME' },
   About: { index: '2', label: 'ABOUT' },
-  Projects: { index: '3', label: 'PROJECTS' },
-  Contact: { index: '4', label: 'CONTACT' },
+  Experience: { index: '3', label: 'EXPERIENCE' },
+  Projects: { index: '4', label: 'PROJECTS' },
+  Contact: { index: '5', label: 'CONTACT' },
 };
 
 function entryForPath(path: string) {
