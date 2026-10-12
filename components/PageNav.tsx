@@ -101,9 +101,9 @@ export default function PageNav({ page, menu, soundOn, menuButtonRef, onToggleSo
         </svg>
       </button>
       <div className="nav-card">
-        <div className="nav-page" aria-live="polite">
+        <button type="button" className="nav-page" aria-label="Toggle navigation menu" aria-expanded={menu} aria-controls="portal-menu" onMouseEnter={playHover} onFocus={playHover} onClick={() => { playClick(); onToggleMenu(); }}><span className="nav-page-label" aria-live="polite">
           <NavLabel index={entry.index} label={entry.label} />
-        </div>
+        </span></button>
         <div className="navigation">
           {menu && (
             <nav className="menu-panel" id="portal-menu" aria-label="Site navigation">
