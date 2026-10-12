@@ -449,3 +449,54 @@
   .loader.loader-ready .loader-label-b{left:calc(25% + 6px);top:calc(50% + 6px)}
   .loader.loader-ready .loader-label-c{right:calc(50% + 6px);top:6px}
 }
+
+
+/* Global core-theme palette: preserve the dark canvas and photographic assets. */
+.portfolio {
+  --fg: var(--accent);
+  --theme-contrast: #050505;
+  color: var(--accent);
+  transition: color .25s ease;
+}
+.portfolio .home-intro h1,
+.portfolio .page-heading h1,
+.portfolio .about-copy h2,
+.portfolio .project-copy h2,
+.portfolio .project-detail h2,
+.portfolio .contact-lines a,
+.portfolio .nav-label,
+.portfolio .wordmark,
+.portfolio .fixed-footer a,
+.portfolio .fixed-footer span,
+.portfolio .ticker span,
+.portfolio .system-header-title h2,
+.portfolio .system-track strong,
+.portfolio .menu-panel,
+.portfolio .nav-card,
+.portfolio .project-row,
+.portfolio .outline-button,
+.portfolio .next-project,
+.portfolio .social-links a {
+  color: var(--accent);
+}
+.portfolio .menu-trigger,
+.portfolio .seg.selected,
+.portfolio .settings-trigger svg {
+  background-color: var(--accent);
+  color: var(--theme-contrast);
+}
+.portfolio .menu-trigger *,
+.portfolio .settings-trigger svg *,
+.portfolio .seg.selected * {
+  color: var(--theme-contrast);
+}
+.portfolio .menu-trigger i { color: var(--theme-contrast); }
+.portfolio .nav-label { text-shadow: 0 0 18px var(--accent-soft); }
+.portfolio .stat { border-bottom-color: var(--accent-soft); }
+.portfolio .sync b { background: var(--accent); }
+.portfolio .outline-button:hover,
+.portfolio .project-row:hover,
+.portfolio .social-links a:hover { border-color: var(--accent); }
+.portfolio button:focus-visible,
+.portfolio a:focus-visible { outline-color: var(--accent); }
+.portfolio ::selection { background: var(--accent); color: var(--theme-contrast); }
