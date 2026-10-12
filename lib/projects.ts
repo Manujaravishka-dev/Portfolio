@@ -4,7 +4,7 @@ export const projects = [
     "category": "Full-Stack E-Commerce",
     "service": "Frontend & Backend Development",
     "slug": "maison-florelle-flower-shop",
-    "image": "https://raw.githubusercontent.com/Manujaravishka/Flower-Shop-Frontend/main/public/placeholder.svg",
+    "image": "https://placehold.co/1200x800/211428/f4e7f5?text=Maison+Florelle",
     "description": "A luxury floral e-commerce platform with product discovery, custom bouquet building, shopping cart, checkout, customer accounts, reviews, and an admin dashboard for product and order management. Built with React, TypeScript, Tailwind CSS, Node.js, Express and MongoDB.",
     "url": "https://flower-boquet-frontend.vercel.app",
     "linkLabel": "Visit Live Website",
