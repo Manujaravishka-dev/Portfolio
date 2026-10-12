@@ -17,6 +17,28 @@ export default function Portfolio({initialPage = 'Home', initialProject = null}:
 const [menu,setMenu]=useState(false),[settings,setSettings]=useState(false);
 const [tier,setTier]=useState('Medium');
   const [accent,setAccent]=useState('White');
+  const [contactName,setContactName]=useState('');
+  const [contactEmail,setContactEmail]=useState('');
+  const [contactMessage,setContactMessage]=useState('');
+  const [contactStatus,setContactStatus]=useState<'idle'|'sending'|'success'|'error'|'unconfigured'>('idle');
+  async function sendContact(event: import('react').FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if(contactStatus==='sending')return;
+    const serviceId=process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId=process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey=process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+    if(!serviceId||!templateId||!publicKey){setContactStatus('unconfigured');return;}
+    setContactStatus('sending');
+    try {
+      const response=await fetch('https://api.emailjs.com/api/v1.0/email/send',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({service_id:serviceId,template_id:templateId,user_id:publicKey,template_params:{from_name:contactName,from_email:contactEmail,reply_to:contactEmail,message:contactMessage}})
+      });
+      if(!response.ok)throw new Error('Email service rejected the message');
+      setContactStatus('success');setContactName('');setContactEmail('');setContactMessage('');
+    } catch {setContactStatus('error');}
+  }
+
   const [loaderDone,setLoaderDone]=useState(false),[time,setTime]=useState('');
   const [selected,setSelected]=useState<number|null>(initialProject),[scroll,setScroll]=useState(0);
   const content=useRef<HTMLDivElement>(null),menuButton=useRef<HTMLButtonElement>(null),systemPanel=useRef<HTMLDivElement>(null);
@@ -81,7 +103,21 @@ return <div className={'portfolio page-'+page.toLowerCase()+(selected!==null?' d
         </article>
       </section>}
       {page==='Projects'&&<section className="projects-scene">{selected===null?<>{projects.map((p,i)=><button className="project-row" key={p.slug} onClick={()=>{setSelected(i);history.pushState({},'','/projects/'+projects[i].slug);content.current?.scrollTo(0,0);}}><span className="project-index">{String(i+1).padStart(2,'0')}</span><div className="project-copy"><h2>{p.title}</h2><div className="project-tags"><span>{p.category}</span><span>{p.service}</span></div><p>{p.description}</p></div><div className="project-preview"><img src={p.image} alt={p.title+' preview'} loading={i<3?'eager':'lazy'}/><small>PROJECT_ID: {p.slug.toUpperCase()}<br/>SYSTEM_READY [DATA_STREAM]</small></div></button>)}</>:<article className="project-detail reveal"><button className="detail-back outline-button" onClick={()=>navigate('Projects')}>← PROJECTS</button><p className="detail-breadcrumb">HOME / PROJECTS / {projects[selected].title.toUpperCase()}</p><h2>{projects[selected].title}</h2><div className="detail-overview"><h3>Project Overview</h3><p>{projects[selected].description}</p><a className="outline-button" href={projects[selected].url || profile.github} target="_blank" rel="noopener noreferrer">{projects[selected].linkLabel || 'View Project'} <ArrowUpRight size={18}/></a></div><dl className="project-facts"><div><dt>PROJECT_TYPE</dt><dd>{projects[selected].category}</dd></div><div><dt>TARGET_PLATFORM</dt><dd>{projects[selected].category==='Mobile app'?'MOBILE':'WEB'}</dd></div><div><dt>PRIMARY_ROLE</dt><dd>{projects[selected].service}</dd></div><div><dt>PROJECT_CREDIT</dt><dd>{projects[selected].credit || 'SAIFULLAH BUTT'}</dd></div></dl><div className="detail-technologies"><small>PROJECT_DISCIPLINES</small><div className="project-tags"><span>{projects[selected].category}</span><span>{projects[selected].service}</span></div></div><div className="detail-marquee">{projects[selected].title} · {projects[selected].title}</div><h3 className="walkthrough-title">PROJECT WALKTHROUGH</h3><p>A closer look at the project’s visual direction and digital experience.</p><img src={projects[selected].image} alt={projects[selected].title}/><div className="detail-concept"><h3>THE CONCEPT</h3><p>{projects[selected].description} Explore the GitHub repository for the complete architecture, API documentation and project setup.</p></div><a className="outline-button" href={projects[selected].url || 'https://www.saifullah.dev/projects/'+projects[selected].slug} target="_blank" rel="noreferrer">VIEW GITHUB REPOSITORY <ArrowUpRight size={16}/></a><button className="next-project" onClick={()=>{const next=(selected+1)%projects.length;setSelected(next);history.pushState({},'','/projects/'+projects[next].slug);content.current?.scrollTo(0,0);}}><small>NEXT PROJECT</small><span>{projects[(selected+1)%projects.length].title} ↗</span></button></article>}</section>}
-      {page==='Contact'&&<section className="contact-scene reveal"><span className="contact-label">WANNA SAY HELLO?</span><div className="contact-lines"><a href={profile.github} target="_blank" rel="noreferrer">MANUJA RAVISHKA <ArrowUpRight size={24}/></a><a href={profile.github+'?tab=repositories'} target="_blank" rel="noreferrer">LET’S CONNECT ↗</a></div><p>© 2026 MANUJA RAVISHKA</p><div className="social-links"><a href={profile.github} target="_blank" rel="noreferrer">GITHUB</a><a href={profile.repository} target="_blank" rel="noreferrer">PORTFOLIO SOURCE</a></div></section>}
+      {page==='Contact'&&<section className="contact-scene contact-form-scene reveal">
+        <span className="contact-label">[ LET'S CONNECT ]</span>
+        <h2 className="contact-form-title">HAVE A PROJECT<br/>IN MIND?</h2>
+        <p className="contact-form-intro">Tell me about your idea, collaboration or opportunity. I would love to hear from you.</p>
+        <form className="contact-form" onSubmit={sendContact}>
+          <div className="contact-form-row">
+            <label><span>[01] YOUR NAME</span><input required maxLength={100} autoComplete="name" placeholder="Enter your name" value={contactName} onChange={e=>setContactName(e.target.value)} /></label>
+            <label><span>[02] EMAIL ADDRESS</span><input required type="email" maxLength={254} autoComplete="email" placeholder="you@example.com" value={contactEmail} onChange={e=>setContactEmail(e.target.value)} /></label>
+          </div>
+          <label><span>[03] YOUR MESSAGE</span><textarea required rows={4} maxLength={5000} placeholder="Tell me about your project..." value={contactMessage} onChange={e=>setContactMessage(e.target.value)} /></label>
+          <button className="contact-submit" type="submit" disabled={contactStatus==='sending'}>{contactStatus==='sending'?'SENDING...':'SEND MESSAGE'} <ArrowUpRight size={18}/></button>
+          <p className="contact-feedback" role="status" aria-live="polite">{contactStatus==='success'?'Message sent successfully. Thank you!':contactStatus==='error'?'Message could not be sent. Please try again.':contactStatus==='unconfigured'?'Email service is not configured yet. Please add your EmailJS environment variables.':' '}</p>
+        </form>
+        <div className="contact-form-bottom"><span>© 2026 MANUJA RAVISHKA</span><div className="social-links"><a href={profile.github} target="_blank" rel="noreferrer">GITHUB ↗</a><a href={profile.repository} target="_blank" rel="noreferrer">PORTFOLIO SOURCE ↗</a></div></div>
+      </section>}
     </main>
     {page==='Projects'&&<div className="scroll-meter"><span>00</span><i><b style={{top:scroll+'%'}}/></i><span>100</span></div>}
     <div className="fixed-footer"><div><p>Wanna Say Hello?</p><a href={profile.github} target="_blank" rel="noreferrer">Manuja Ravishka ↗</a></div>{page!=='Projects'&&<div><p>Local Time</p><span>Colombo {time}</span></div>}</div>
