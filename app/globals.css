@@ -546,3 +546,20 @@
 @media(max-width:900px){.loader-hero{left:7%;width:84%;top:46%}.loader-hero-title{font-size:clamp(64px,12vw,115px)}}
 @media(max-width:650px){.loader-hero{left:7%;top:42%;width:86%}.loader-hero-title{font-size:clamp(58px,13.5vw,88px);margin:17px 0}.loader-hero-sub{font-size:9px;letter-spacing:.09em}.loader-hero-foot{margin-top:22px;font-size:8px}.loader-hero-eyebrow{font-size:8px}.loader-percent{font-size:74px;right:20px;top:22px}.loader-percent small{font-size:17px}.loader-ctl{z-index:2}}
 @media(prefers-reduced-motion:reduce){.loader-hero-title>span{opacity:1;animation:none}.loader-hero-eyebrow i,.loader-hero-rule span,.loader-grid{animation:none}}
+
+/* Experience page — editorial timeline, consistent with the monochrome console. */
+.experience-scene{width:min(850px,calc(100% - 64px));margin:125px auto 120px;padding-bottom:35px;color:var(--accent)}
+.experience-kicker{font:600 10px var(--mono);letter-spacing:.2em;color:#999}
+.experience-scene h2{font:400 clamp(60px,9vw,120px)/.95 var(--heading);margin:20px 0 15px;letter-spacing:-.015em}
+.experience-accent{color:#777}
+.experience-intro{max-width:650px;color:#aaa;font:13px/1.9 var(--mono);margin-bottom:45px}
+.experience-timeline{border-top:1px solid #ffffff35}
+.experience-entry{display:grid;grid-template-columns:200px minmax(0,1fr);gap:35px;border-bottom:1px solid #ffffff28;padding:35px 0}
+.experience-number{font:600 10px/1.7 var(--mono);letter-spacing:.12em;color:#888}
+.experience-entry h3{font:400 clamp(28px,4vw,48px)/1.1 var(--heading);margin:0 0 9px;color:var(--accent)}
+.experience-role{font:600 11px var(--mono);letter-spacing:.06em;color:#dedede;margin:0 0 15px}
+.experience-entry div>p:not(.experience-role){font:12px/1.8 var(--mono);color:#999;max-width:520px}
+.experience-entry a,.experience-profile{display:inline-flex;align-items:center;gap:12px;color:var(--accent);text-decoration:none;font:600 10px var(--mono);letter-spacing:.11em;margin-top:17px;border-bottom:1px solid #ffffff45;padding-bottom:7px}
+.experience-entry a:hover,.experience-profile:hover{border-color:var(--accent)}
+.experience-profile{margin-top:35px;font-size:12px}
+@media(max-width:650px){.experience-scene{width:calc(100% - 44px);margin:105px auto 115px}.experience-scene h2{font-size:clamp(49px,13vw,76px)}.experience-entry{grid-template-columns:1fr;gap:12px;padding:26px 0}.experience-intro{font-size:11px;margin-bottom:30px}}
